@@ -1,0 +1,30 @@
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+
+# Serverless directories
+serverless/.serverless
+serverless/node_modules
+terraform/.terraform
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+terraform.state.json
+node_modules
