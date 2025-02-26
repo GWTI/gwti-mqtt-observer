@@ -14,6 +14,7 @@ provider:
     OBSERVER_DATA_TABLE_NAME: ${file(../terraform/terraform-state-${self:provider.stage}.json):observer_zip_table_name}
     SEND_TO_TARGET_SERVER_QUEUE: ${file(../terraform/terraform-state-${self:provider.stage}.json):send_on_to_target_server_queue_url}
     DEVKEY_CACHE_TABLE_NAME: ${file(../terraform/terraform-state-${self:provider.stage}.json):devkey_cache_name}
+    EY_FORK_MQTT_TOPIC: ey/observer/${self:provider.stage}
 
 functions:
   csvToJson:
@@ -22,7 +23,17 @@ functions:
     events:
       - iot:
           sql: "SELECT * FROM 'observer/${self:provider.stage}/#'"
+      - iot:
+          sql: "SELECT * FROM 'ey/observer/${self:provider.stage}/#'"
     role: ${file(../terraform/terraform-state-${self:provider.stage}.json):observer_role_arn}
+    
+  forkEyDataToEyStream:
+    handler: src/forkEyDataToEyStream.lambda_handler
+    timeout: 300
+    events:
+      - iot:
+          sql: "SELECT * FROM 'ey/observer/${self:provider.stage}/#'"
+    role: ${file(../terraform/terraform-state-${self:provider.stage}.json):ey_fork_observer_data_role_arn}
 
   sendObserverData:
     handler: src/sendObserverData.lambda_handler

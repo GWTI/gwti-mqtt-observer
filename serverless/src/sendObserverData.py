@@ -3,12 +3,14 @@ import requests
 from urllib.parse import quote, unquote
 from datetime import datetime
 
+
 def get_url(serial):
     encoded_serial = requests.utils.quote(serial)
     try:
-        url_response = requests.get(f"https://ggm7y77lti.execute-api.eu-west-2.amazonaws.com/production/v1/csm/target-url?serial={encoded_serial}")
+        url_response = requests.get(
+            f"https://ggm7y77lti.execute-api.eu-west-2.amazonaws.com/production/v1/csm/target-url?serial={encoded_serial}")
         print('url_response: ', url_response)
-        url_response.raise_for_status()  
+        url_response.raise_for_status()
         response_json = url_response.json()
         print('response_json: ', response_json)
 
@@ -29,13 +31,14 @@ def get_url(serial):
         print(f"JSON decode error: {json_err}")  # JSON decode error
     return None
 
+
 def lambda_handler(event, context):
     print(f"event: {event}")
 
     body = event['Records'][0]['body']
     data = json.loads(body)
     print('data: ', data)
-    
+
     # Define headers for the POST request
     headers = {'Content-Type': 'application/json'}
 
@@ -59,19 +62,18 @@ def lambda_handler(event, context):
             'statusCode': 500,
             'body': json.dumps('Failed to retrieve URL.')
         }
-    
 
     print('headers: ', headers)
     print(f'{url}/api/v1/MQTT-Ingress/telemetry')
-    
-    # Send the JSON data to the specified endpoint
-    resp = requests.post(f'{url}/api/v1/MQTT-Ingress/telemetry', headers=headers, json=data)
 
-    # Check the response
-    if resp.status_code == 200:
-        print("Data sent successfully:")
-    else:
-        print(f"Failed to send data. Status code: {resp.status_code}, Response: {resp.text}")
+    # # Send the JSON data to the specified endpoint
+    # resp = requests.post(f'{url}/api/v1/MQTT-Ingress/telemetry', headers=headers, json=data)
+
+    # # Check the response
+    # if resp.status_code == 200:
+    #     print("Data sent successfully:")
+    # else:
+    #     print(f"Failed to send data. Status code: {resp.status_code}, Response: {resp.text}")
 
     return {
         'statusCode': 200,
