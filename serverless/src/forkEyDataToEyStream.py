@@ -11,7 +11,8 @@ from datetime import datetime
 sqs = boto3.client('sqs')
 dynamodb = boto3.resource('dynamodb')
 iot_client_us_region = boto3.client("iot-data", region_name="us-east-1")
-# queue_url = "https://sqs.eu-west-2.amazonaws.com/470851704113/Observer-MQTT-development-sendToTargetServer.fifo"  # Replace with your SQS Queue URL
+# Replace with your SQS Queue URL
+queue_url = "https://sqs.eu-west-2.amazonaws.com/470851704113/Observer-MQTT-development-sendToTargetServer.fifo"
 # table_name = "Observer-MQTT-development-ObserverDataTable"  # Replace with your DynamoDB Table name
 # Replace with your cache DynamoDB Table name
 cache_table_name = "Observer-MQTT-development-DevKeyCache"
@@ -172,25 +173,20 @@ def lambda_handler(event, context):
 
         print(f"Message sent successfully: {response}")
 
-        return {
-            "statusCode": 200,
-            "body": json.dumps("Message sent successfully!")
-        }
+        sqs_response = sqs.send_message(
+            QueueUrl=queue_url,
+            MessageBody=json.dumps(message),
+            MessageGroupId=f"{timestamp}-{datasource}"
+        )
 
-        # sqs_response = sqs.send_message(
-        #     QueueUrl=queue_url,
-        #     MessageBody=json.dumps(message),
-        #     MessageGroupId=f"{timestamp}-{datasource}"
-        # )
+        print(f"sqs send response: {sqs_response}")
 
-        # print(f"sqs send response: {sqs_response}")
-
-    # return {
-    #     "statusCode": 200,
-    #     "body": json.dumps({
-    #         "message": "zip file processing finished",
-    #     }),
-    # }
+    return {
+        "statusCode": 200,
+        "body": json.dumps({
+            "message": "zip file processing finished",
+        }),
+    }
 
 
 def parse_timestamp(ts):

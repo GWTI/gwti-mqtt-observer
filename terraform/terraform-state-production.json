@@ -1,10 +1,11 @@
 {
   "devkey_cache_name": "gwti-mqtt-observer-production-DevKeyCache",
+  "ey_fork_observer_data_role_arn": "arn:aws:iam::470851704113:role/gwti-mqtt-observer-production-ForkEyObserverDataRole",
   "observer_data_role_arn": "arn:aws:iam::470851704113:role/gwti-mqtt-observer-production-SendObserverDataRole",
   "observer_role_arn": "arn:aws:iam::470851704113:role/gwti-mqtt-observer-production-ProcessObserverRole",
   "observer_zip_table_arn": "arn:aws:dynamodb:eu-west-2:470851704113:table/gwti-mqtt-observer-production-RawObserverDataTable",
   "observer_zip_table_name": "gwti-mqtt-observer-production-RawObserverDataTable",
-  "send_data_sg_id": "sg-01b9346d472530de3",
+  "send_data_sg_id": "sg-09856defaddb115be",
   "send_on_to_target_server_arn": "arn:aws:sqs:eu-west-2:470851704113:gwti-mqtt-observer-production-sendToTargetServer.fifo",
   "send_on_to_target_server_queue_url": "https://sqs.eu-west-2.amazonaws.com/470851704113/gwti-mqtt-observer-production-sendToTargetServer.fifo",
   "subnet_a": "subnet-026dd7832e1fafe15",

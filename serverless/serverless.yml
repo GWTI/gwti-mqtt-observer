@@ -21,8 +21,8 @@ functions:
     handler: src/csvToJson.lambda_handler
     timeout: 300
     events:
-      - iot:
-          sql: "SELECT * FROM 'observer/${self:provider.stage}/#'"
+      # - iot:
+      #     sql: "SELECT * FROM 'observer/${self:provider.stage}/#'"
       - iot:
           sql: "SELECT * FROM 'ey/observer/${self:provider.stage}/#'"
     role: ${file(../terraform/terraform-state-${self:provider.stage}.json):observer_role_arn}
