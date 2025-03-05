@@ -216,6 +216,11 @@ resource "aws_iam_role" "observer_data_role" {
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
 }
 
+resource "aws_iam_role" "fork_ey_observer_data_role" {
+  name               = "${var.SERVICE}-${var.STAGE}-ForkEyObserverDataRole"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
+}
+
 resource "aws_iam_role_policy_attachment" "observer_policy_attachment" {
   role       = aws_iam_role.observer_role.name
   policy_arn = aws_iam_policy.observer_policy.arn
@@ -224,6 +229,49 @@ resource "aws_iam_role_policy_attachment" "observer_policy_attachment" {
 resource "aws_iam_role_policy_attachment" "observer_data_policy_attachment" {
   role       = aws_iam_role.observer_data_role.name
   policy_arn = aws_iam_policy.observer_data_policy.arn
+}
+
+
+
+
+
+
+resource "aws_iam_role_policy_attachment" "fork_ey_observer_data_policy_attachment" {
+  role       = aws_iam_role.fork_ey_observer_data_role.name
+  policy_arn = aws_iam_policy.fork_ey_observer_data_policy.arn
+}
+
+data "aws_iam_policy_document" "fork_ey_observer_data_policy_doc" {
+
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
+    resources = ["arn:aws:logs:*:*:*"]
+  }
+
+  statement {
+    effect   = "Allow"
+    actions   = ["iot:Publish"]
+    resources = ["*"]
+  }
+  
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem",
+      "dynamodb:GetItem"
+    ]
+    resources = ["*"]
+  }
+
+
+
+}
+
+resource "aws_iam_policy" "fork_ey_observer_data_policy" {
+  name   = "${var.SERVICE}-${var.STAGE}-ForkEyObserverDataPolicy"
+  policy = data.aws_iam_policy_document.fork_ey_observer_data_policy_doc.json
 }
 
 

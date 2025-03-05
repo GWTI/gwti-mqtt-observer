@@ -49,3 +49,8 @@ output "observer_data_role_arn" {
   value       = aws_iam_role.observer_data_role.arn
   description = "ARN of the SendObserverDataRole IAM role"
 }
+
+output "ey_fork_observer_data_role_arn" {
+  value       = aws_iam_role.fork_ey_observer_data_role.arn
+  description = "ARN of the ForkEyObserverDataRole IAM role"
+}

@@ -53,7 +53,7 @@ function deployTerraform {
 
 function deployServerless {
     echo "Deploying Serverless application for stage: ${1}"
-    cd "${CWD}/serverless"
+    cd "${CWD}"
     rm -rf .serverless
     TF_STATE=$(cat "${CWD}/terraform/terraform-state-${STAGE}.json")
     echo "Terraform state: ${TF_STATE}"
@@ -73,7 +73,6 @@ function destroyTerraform {
 
 function destroyServerless {
     echo "Destroying Serverless application for stage: ${STAGE}"
-    cd "${CWD}/serverless"
+    cd "${CWD}"
     serverless remove --stage "${STAGE}" --region "${REGION}"
-    aws s3 rb "mqtt-obs-sls-${REGION}-${STAGE}-${AWS_ACCOUNT_ID}" --force --region "${REGION}"
 }

@@ -1,0 +1,14 @@
+[
+  {
+    "DS": "a1F5",
+    "slave name": "AXAXL_Meter",
+    "TS": "1741107859",
+    "date": "04/03/2025 12:04:19",
+    "slaveId": "1",
+    "slaveIP": "",
+    "request name": "Voltage_LN_Average",
+    "data": "117.787025",
+    "Full modbus register address": "403036",
+    "address": 3036
+  }
+]
