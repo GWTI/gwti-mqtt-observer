@@ -18,6 +18,7 @@ var/
 
 
 # Serverless directories
+.serverless
 serverless/.serverless
 serverless/node_modules
 terraform/.terraform
