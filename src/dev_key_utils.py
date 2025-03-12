@@ -5,6 +5,18 @@ import json
 
 dynamodb = boto3.resource('dynamodb')
 
+# Define API Gateway URLs for different stages
+API_URLS = {
+    'development': 'https://ofoeavfqk2.execute-api.eu-west-2.amazonaws.com/development/v1',
+    'qa': 'https://9df6suxbo4.execute-api.eu-west-2.amazonaws.com/qa/v1',
+    'production': 'https://ggm7y77lti.execute-api.eu-west-2.amazonaws.com/production/v1'
+}
+
+def get_api_base_url():
+    """Get the appropriate API base URL based on the current stage."""
+    stage = os.environ.get('STAGE', 'dev')  # Default to 'dev' if not set
+    return API_URLS.get(stage, API_URLS['dev'])  # Fallback to dev if stage not found
+
 def get_dev_key(datasource, address):
     print('address: ', address)
     print('datasource: ', datasource)
@@ -15,9 +27,10 @@ def get_dev_key(datasource, address):
         return cached_devkey
 
     encoded_datasource = requests.utils.quote(datasource)
+    base_url = get_api_base_url()
     try:
         devkey_response = requests.get(
-            f"https://ggm7y77lti.execute-api.eu-west-2.amazonaws.com/production/v1/point/access-token?serial={encoded_datasource}&address={address}"
+            f"{base_url}/point/access-token?serial={encoded_datasource}&address={address}"
         )
         devkey_response.raise_for_status()
         response_json = devkey_response.json()

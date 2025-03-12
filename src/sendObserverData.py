@@ -67,15 +67,15 @@ def lambda_handler(event, context):
     print(f'{url}/api/v1/MQTT-Ingress/telemetry')
 
     # Send the JSON data to the specified endpoint
-    resp = requests.post(
-        f'{url}/api/v1/MQTT-Ingress/telemetry', headers=headers, json=data)
+    # resp = requests.post(
+    #     f'{url}/api/v1/MQTT-Ingress/telemetry', headers=headers, json=data)
 
-    # Check the response
-    if resp.status_code == 200:
-        print("Data sent successfully:")
-    else:
-        print(
-            f"Failed to send data. Status code: {resp.status_code}, Response: {resp.text}")
+    # # Check the response
+    # if resp.status_code == 200:
+    #     print("Data sent successfully:")
+    # else:
+    #     print(
+    #         f"Failed to send data. Status code: {resp.status_code}, Response: {resp.text}")
 
     return {
         'statusCode': 200,

@@ -7,10 +7,11 @@ provider:
   name: aws
   runtime: python3.9
   region: ${env:AWS_DEFAULT_REGION, 'eu-west-2'}
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, 'development'}
   deploymentBucket:
     name: mqtt-obs-sls-${self:provider.region}-${self:provider.stage}-${env:AWS_ACCOUNT_ID}
   environment:
+    STAGE: ${self:provider.stage}
     OBSERVER_DATA_TABLE_NAME: ${file(./terraform/terraform-state-${self:provider.stage}.json):observer_zip_table_name}
     SEND_TO_TARGET_SERVER_QUEUE: ${file(./terraform/terraform-state-${self:provider.stage}.json):send_on_to_target_server_queue_url}
     DEVKEY_CACHE_TABLE_NAME: ${file(./terraform/terraform-state-${self:provider.stage}.json):devkey_cache_name}
@@ -27,7 +28,7 @@ functions:
           sql: "SELECT * FROM 'ey/observer/${self:provider.stage}/#'"
     role: ${file(./terraform/terraform-state-${self:provider.stage}.json):observer_role_arn}
   
-  observerMHandler:
+  observerMNPHandler:
     handler: src/observer_m_no_process.lambda_handler
     timeout: 300
     events:

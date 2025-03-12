@@ -19,7 +19,7 @@ def lambda_handler(event, context):
         record = event[0]
         datasource = record.get('DS', '')
         address = record.get('address', '')
-        timestamp = record.get('TS', '')  # Using TS; could use 'date' if preferred
+        timestamp = record.get('TS', '')  
         data = record.get('data', '')
 
         print(f"datasource: {datasource}")
