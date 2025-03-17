@@ -1,14 +1,28 @@
 import json
 import requests
+import os
 from urllib.parse import quote, unquote
 from datetime import datetime
 
+# Define API Gateway URLs for different stages
+API_URLS = {
+    'development': 'https://ofoeavfqk2.execute-api.eu-west-2.amazonaws.com/development/v1',
+    'qa': 'https://9df6suxbo4.execute-api.eu-west-2.amazonaws.com/qa/v1',
+    'production': 'https://ggm7y77lti.execute-api.eu-west-2.amazonaws.com/production/v1'
+}
+
+def get_api_base_url():
+    """Get the appropriate API base URL based on the current stage."""
+    stage = os.environ.get('STAGE', 'development')  
+    print('stage: ', stage)
+    return API_URLS.get(stage, API_URLS['development']) 
 
 def get_url(serial):
     encoded_serial = requests.utils.quote(serial)
+    base_url = get_api_base_url()
     try:
         url_response = requests.get(
-            f"https://ggm7y77lti.execute-api.eu-west-2.amazonaws.com/production/v1/csm/target-url?serial={encoded_serial}")
+            f"{base_url}/csm/target-url?serial={encoded_serial}")
         print('url_response: ', url_response)
         url_response.raise_for_status()
         response_json = url_response.json()
@@ -30,7 +44,6 @@ def get_url(serial):
     except json.JSONDecodeError as json_err:
         print(f"JSON decode error: {json_err}")  # JSON decode error
     return None
-
 
 def lambda_handler(event, context):
     print(f"event: {event}")
@@ -67,15 +80,15 @@ def lambda_handler(event, context):
     print(f'{url}/api/v1/MQTT-Ingress/telemetry')
 
     # Send the JSON data to the specified endpoint
-    # resp = requests.post(
-    #     f'{url}/api/v1/MQTT-Ingress/telemetry', headers=headers, json=data)
+    resp = requests.post(
+        f'{url}/api/v1/MQTT-Ingress/telemetry', headers=headers, json=data)
 
-    # # Check the response
-    # if resp.status_code == 200:
-    #     print("Data sent successfully:")
-    # else:
-    #     print(
-    #         f"Failed to send data. Status code: {resp.status_code}, Response: {resp.text}")
+    # Check the response
+    if resp.status_code == 200:
+        print("Data sent successfully:")
+    else:
+        print(
+            f"Failed to send data. Status code: {resp.status_code}, Response: {resp.text}")
 
     return {
         'statusCode': 200,

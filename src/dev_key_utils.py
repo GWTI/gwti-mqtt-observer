@@ -14,8 +14,8 @@ API_URLS = {
 
 def get_api_base_url():
     """Get the appropriate API base URL based on the current stage."""
-    stage = os.environ.get('STAGE', 'dev')  # Default to 'dev' if not set
-    return API_URLS.get(stage, API_URLS['dev'])  # Fallback to dev if stage not found
+    stage = os.environ.get('STAGE', 'development')  # Default to 'dev' if not set
+    return API_URLS.get(stage, API_URLS['development'])  # Fallback to dev if stage not found
 
 def get_dev_key(datasource, address):
     print('address: ', address)
