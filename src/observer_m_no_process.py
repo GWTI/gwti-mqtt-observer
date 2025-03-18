@@ -51,7 +51,7 @@ def lambda_handler(event, context):
 
         if dev_key and attr_name:
             telemetry = {
-                'ts': timestamp,
+                'ts': configured_timestamp,
                 'values': {attr_name: data.strip()}
             }
             data_entries.append({
