@@ -5,7 +5,7 @@
   "observer_role_arn": "arn:aws:iam::470851704113:role/gwti-mqtt-observer-development-ProcessObserverRole",
   "observer_zip_table_arn": "arn:aws:dynamodb:eu-west-2:470851704113:table/gwti-mqtt-observer-development-RawObserverDataTable",
   "observer_zip_table_name": "gwti-mqtt-observer-development-RawObserverDataTable",
-  "send_data_sg_id": "sg-05a1dfb0f1b7c8554",
+  "send_data_sg_id": "sg-065eee30d81bccdd0",
   "send_on_to_target_server_arn": "arn:aws:sqs:eu-west-2:470851704113:gwti-mqtt-observer-development-sendToTargetServer.fifo",
   "send_on_to_target_server_queue_url": "https://sqs.eu-west-2.amazonaws.com/470851704113/gwti-mqtt-observer-development-sendToTargetServer.fifo",
   "subnet_a": "subnet-026dd7832e1fafe15",
