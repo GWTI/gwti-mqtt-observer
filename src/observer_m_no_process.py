@@ -3,6 +3,7 @@ import boto3
 from src.dev_key_utils import get_dev_key
 from src.timestamp_utils import parse_timestamp
 from src.sqs_service import send_to_queue
+from src.utils.pad_timestamp import pad_timestamp
 
 sqs = boto3.client('sqs')
 
@@ -43,6 +44,8 @@ def lambda_handler(event, context):
 
         dev_key = config_details.get('DevKey')
         attr_name = config_details.get('AttrName')
+        configured_timestamp = pad_timestamp(timestamp)
+        print('configured_timestamp: ', configured_timestamp)
         print(f"dev_key: {dev_key}")
         print(f"attr_name: {attr_name}")
 
