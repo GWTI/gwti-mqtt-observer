@@ -1,6 +1,8 @@
 {
   "devkey_cache_name": "gwti-mqtt-observer-development-DevKeyCache",
   "ey_fork_observer_data_role_arn": "arn:aws:iam::470851704113:role/gwti-mqtt-observer-development-ForkEyObserverDataRole",
+  "kinesis_stream_arn": "arn:aws:kinesis:eu-west-2:470851704113:stream/gwti-mqtt-observer-development-DataStream",
+  "kinesis_stream_name": "gwti-mqtt-observer-development-DataStream",
   "observer_data_role_arn": "arn:aws:iam::470851704113:role/gwti-mqtt-observer-development-SendObserverDataRole",
   "observer_role_arn": "arn:aws:iam::470851704113:role/gwti-mqtt-observer-development-ProcessObserverRole",
   "observer_zip_table_arn": "arn:aws:dynamodb:eu-west-2:470851704113:table/gwti-mqtt-observer-development-RawObserverDataTable",

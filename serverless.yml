@@ -19,7 +19,7 @@ provider:
 
 functions:
   csvToJson:
-    handler: src/csvToJson.lambda_handler
+    handler: src/common/csvToJson.lambda_handler
     timeout: 300
     events:
       # - iot:
@@ -29,31 +29,28 @@ functions:
     role: ${file(./terraform/terraform-state-${self:provider.stage}.json):observer_role_arn}
   
   observerMNPHandler:
-    handler: src/observer_m_no_process.lambda_handler
+    handler: src/observer_m/observer_m_no_process.lambda_handler
     timeout: 300
     events:
       - iot:
           sql: "SELECT * FROM 'observer-m/np/${self:provider.stage}/#'"
     role: ${file(./terraform/terraform-state-${self:provider.stage}.json):observer_role_arn}
 
-  observerMHandler:
-    handler: src/observer_m.lambda_handler
-    timeout: 300
+  processKinesisStream:
+    handler: src/observer_m/process_message.lambda_handler
+    timeout: 60
     events:
-      - iot:
-          sql: "SELECT * FROM 'observer-m/${self:provider.stage}/#'"
+      - stream:
+          arn: ${file(./terraform/terraform-state-${self:provider.stage}.json):kinesis_stream_arn}
+          batchSize: 100
+          batchWindow: 60
+          startingPosition: LATEST
     role: ${file(./terraform/terraform-state-${self:provider.stage}.json):observer_role_arn}
     
-  forkEyDataToEyStream:
-    handler: src/forkEyDataToEyStream.lambda_handler
-    timeout: 300
-    events:
-      - iot:
-          sql: "SELECT * FROM 'ey/observer/${self:provider.stage}/#'"
-    role: ${file(./terraform/terraform-state-${self:provider.stage}.json):ey_fork_observer_data_role_arn}
+
 
   sendObserverData:
-    handler: src/sendObserverData.lambda_handler
+    handler: src/common/sendObserverData.lambda_handler
     timeout: 60
     events:
       - sqs: ${file(./terraform/terraform-state-${self:provider.stage}.json):send_on_to_target_server_arn}

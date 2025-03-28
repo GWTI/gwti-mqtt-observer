@@ -1,8 +1,8 @@
 import json
 import boto3
-from src.dev_key_utils import get_dev_key
-from src.timestamp_utils import parse_timestamp
-from src.sqs_service import send_to_queue
+from src.utils.dev_key_utils import get_dev_key
+from src.utils.timestamp_utils import parse_timestamp
+from src.sqs.sqs_service import send_to_queue
 
 sqs = boto3.client('sqs')
 

@@ -1,8 +1,8 @@
 import base64
 import json
-from src.extract_metadata import extract_metadata, send_metadata_to_dynamo
-from src.process_zip_data import process_zip_data
-from src.sqs_service import send_to_queue
+from src.utils.extract_metadata import extract_metadata, send_metadata_to_dynamo
+from src.common.process_zip_data import process_zip_data
+from src.sqs.sqs_service import send_to_queue
 
 
 

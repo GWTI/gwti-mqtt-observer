@@ -1,9 +1,9 @@
 import io
 import zipfile
 import csv
-from src.extract_metadata import extract_metadata
-from src.dev_key_utils import get_dev_key
-from src.timestamp_utils import parse_timestamp
+from src.utils.extract_metadata import extract_metadata
+from src.utils.dev_key_utils import get_dev_key
+from src.utils.timestamp_utils import parse_timestamp
 
 def process_zip_data(decoded_data):
     """Process the ZIP file and extract data entries."""

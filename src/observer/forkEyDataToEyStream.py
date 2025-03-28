@@ -5,7 +5,6 @@ import base64
 import boto3
 import os
 import csv
-import requests
 from datetime import datetime
 
 iot_client_us_region = boto3.client("iot-data", region_name="us-east-1")

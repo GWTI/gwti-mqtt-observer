@@ -74,3 +74,30 @@ def store_dev_key_in_cache(datasource, address, dev_key):
         )
     except Exception as e:
         print(f"Error storing item in DynamoDB: {e}")
+
+def fetch_knx_types(datasource, address):
+    print('address: ', address)
+    print('datasource: ', datasource)
+    """Fetch DevKey from cache or API."""
+    cached_devkey = get_dev_key_from_cache(datasource, address)
+    print('cached_devkey: ', cached_devkey)
+    if cached_devkey:
+        return cached_devkey
+
+    encoded_datasource = requests.utils.quote(datasource)
+    base_url = get_api_base_url()
+    try:
+        # Replace with your actual API endpoint
+        devkey_response = requests.get(
+            f"{base_url}/point/knx-type?serial={encoded_datasource}&address={address}"
+        )
+        devkey_response.raise_for_status()
+        response_json = devkey_response.json()  # Raise an error for bad status codes
+        if 'DevKey' in response_json and 'AttrName' in response_json:
+            store_dev_key_in_cache(datasource, address, response_json)
+            return response_json
+    except requests.exceptions.RequestException as err:
+        print(f"Request error occurred: {err}")
+    except json.JSONDecodeError as json_err:
+        print(f"JSON decode error: {json_err}")
+    return None

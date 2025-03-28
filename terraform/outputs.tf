@@ -54,3 +54,15 @@ output "ey_fork_observer_data_role_arn" {
   value       = aws_iam_role.fork_ey_observer_data_role.arn
   description = "ARN of the ForkEyObserverDataRole IAM role"
 }
+
+
+# Outputs for Serverless.yml
+output "kinesis_stream_arn" {
+  value = aws_kinesis_stream.data_stream.arn
+}
+
+output "kinesis_stream_name" {
+  value = aws_kinesis_stream.data_stream.name
+}
+
+
