@@ -47,6 +47,11 @@ functions:
   sendObserverData:
     handler: src/sendObserverData.lambda_handler
     timeout: 60
+    vpc:
+      securityGroupIds:
+        - sg-07e021b9819e2bd78
+      subnetIds:
+        - subnet-04c7ddc192e36fcf2
     events:
       - sqs: ${file(./terraform/terraform-state-${self:provider.stage}.json):send_on_to_target_server_arn}
     role: ${file(./terraform/terraform-state-${self:provider.stage}.json):observer_data_role_arn}

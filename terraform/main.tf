@@ -195,7 +195,9 @@ data "aws_iam_policy_document" "observer_data_policy_doc" {
       "ec2:DescribeNetworkInterfaces",
       "ec2:DeleteNetworkInterface",
       "ec2:DescribeSubnets",
-      "ec2:DescribeVpcs"
+      "ec2:DescribeVpcs",     
+      "ec2:AssignPrivateIpAddresses",
+      "ec2:UnassignPrivateIpAddresses"
     ]
     resources = ["*"]
   }
