@@ -57,6 +57,7 @@ def lambda_handler(event, context):
                 "DevKey": dev_key
             })
 
+        print('data_entries: ', data_entries)
         message = {
             "timestamp": timestamp_obj,
             "datasource": datasource,

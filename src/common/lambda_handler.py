@@ -25,6 +25,7 @@ def lambda_handler(event, context):
 
     # Step 2: Process the ZIP file data
     timestamp, datasource, data_entries = process_zip_data(decoded_data)
+    print('data_entries: ', data_entries)
     if not data_entries:
         return {
             "statusCode": 400,

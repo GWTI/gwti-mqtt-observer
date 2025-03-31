@@ -20,6 +20,7 @@ def get_api_base_url():
 def get_url(serial):
     encoded_serial = requests.utils.quote(serial)
     base_url = get_api_base_url()
+    print('base_url: ', base_url)
     try:
         url_response = requests.get(
             f"{base_url}/csm/target-url?serial={encoded_serial}")
@@ -83,15 +84,15 @@ def lambda_handler(event, context):
     resp = requests.post(
         f'{url}/api/v1/MQTT-Ingress/telemetry', headers=headers, json=data)
     
-    if serial == 'a1F5':
-        extra_resp = requests.post(
-            f'http://10.0.3.191:6587/mqtt', headers=headers, json=data)
+    # if serial == 'a1F5':
+    #     extra_resp = requests.post(
+    #         f'http://10.0.3.191:6587/mqtt', headers=headers, json=data)
         
-        if extra_resp.status_code == 200:
-            print("EXTRA Data sent successfully:")
-        else:
-            print(
-                f"EXTRA Failed to send data. Status code: {extra_resp.status_code}, Response: {extra_resp.text}")
+    #     if extra_resp.status_code == 200:
+    #         print("EXTRA Data sent successfully:")
+    #     else:
+    #         print(
+    #             f"EXTRA Failed to send data. Status code: {extra_resp.status_code}, Response: {extra_resp.text}")
 
     # Check the response
     if resp.status_code == 200:
