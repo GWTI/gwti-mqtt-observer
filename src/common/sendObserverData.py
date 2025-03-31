@@ -11,11 +11,13 @@ API_URLS = {
     'production': 'https://ggm7y77lti.execute-api.eu-west-2.amazonaws.com/production/v1'
 }
 
+
 def get_api_base_url():
     """Get the appropriate API base URL based on the current stage."""
-    stage = os.environ.get('STAGE', 'development')  
+    stage = os.environ.get('STAGE', 'development')
     print('stage: ', stage)
-    return API_URLS.get(stage, API_URLS['development']) 
+    return API_URLS.get(stage, API_URLS['development'])
+
 
 def get_url(serial):
     encoded_serial = requests.utils.quote(serial)
@@ -45,6 +47,7 @@ def get_url(serial):
     except json.JSONDecodeError as json_err:
         print(f"JSON decode error: {json_err}")  # JSON decode error
     return None
+
 
 def lambda_handler(event, context):
     print(f"event: {event}")
@@ -93,6 +96,16 @@ def lambda_handler(event, context):
     #     else:
     #         print(
     #             f"EXTRA Failed to send data. Status code: {extra_resp.status_code}, Response: {extra_resp.text}")
+
+    if serial == 'a1F5':
+        extra_resp = requests.post(
+            f'http://10.0.3.191:6587/mqtt', headers=headers, json=data)
+
+        if extra_resp.status_code == 200:
+            print("EXTRA Data sent successfully:")
+        else:
+            print(
+                f"EXTRA Failed to send data. Status code: {extra_resp.status_code}, Response: {extra_resp.text}")
 
     # Check the response
     if resp.status_code == 200:

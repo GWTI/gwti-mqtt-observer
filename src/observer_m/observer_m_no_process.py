@@ -1,8 +1,10 @@
 import json
 import boto3
+
 from src.utils.dev_key_utils import get_dev_key
 from src.utils.timestamp_utils import parse_timestamp
 from src.sqs.sqs_service import send_to_queue
+
 
 sqs = boto3.client('sqs')
 
@@ -43,12 +45,14 @@ def lambda_handler(event, context):
 
         dev_key = config_details.get('DevKey')
         attr_name = config_details.get('AttrName')
+        configured_timestamp = pad_timestamp(timestamp)
+        print('configured_timestamp: ', configured_timestamp)
         print(f"dev_key: {dev_key}")
         print(f"attr_name: {attr_name}")
 
         if dev_key and attr_name:
             telemetry = {
-                'ts': timestamp,
+                'ts': configured_timestamp,
                 'values': {attr_name: data.strip()}
             }
             data_entries.append({

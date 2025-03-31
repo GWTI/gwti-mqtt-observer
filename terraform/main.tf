@@ -61,3 +61,161 @@ resource "aws_sqs_queue" "send_on_to_target_server_queue" {
   visibility_timeout_seconds  = 60
 }
 
+
+# IAM Policies and Roles (unchanged except naming consistency)
+data "aws_iam_policy_document" "lambda_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "observer_policy_doc" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem",
+      "dynamodb:GetItem"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["sqs:SendMessage"]
+    resources = ["*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
+    resources = ["arn:aws:logs:*:*:*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["kms:Decrypt"]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "observer_policy" {
+  name   = "${var.SERVICE}-${var.STAGE}-ProcessObserverPolicy"
+  policy = data.aws_iam_policy_document.observer_policy_doc.json
+}
+
+data "aws_iam_policy_document" "observer_data_policy_doc" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
+    resources = ["arn:aws:logs:*:*:*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["kms:Decrypt"]
+    resources = ["*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeVpcs",
+      "ec2:AssignPrivateIpAddresses",
+      "ec2:UnassignPrivateIpAddresses"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "observer_data_policy" {
+  name   = "${var.SERVICE}-${var.STAGE}-SendObserverDataPolicy"
+  policy = data.aws_iam_policy_document.observer_data_policy_doc.json
+}
+
+resource "aws_iam_role" "observer_role" {
+  name               = "${var.SERVICE}-${var.STAGE}-ProcessObserverRole"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
+}
+
+resource "aws_iam_role" "observer_data_role" {
+  name               = "${var.SERVICE}-${var.STAGE}-SendObserverDataRole"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
+}
+
+resource "aws_iam_role" "fork_ey_observer_data_role" {
+  name               = "${var.SERVICE}-${var.STAGE}-ForkEyObserverDataRole"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "observer_policy_attachment" {
+  role       = aws_iam_role.observer_role.name
+  policy_arn = aws_iam_policy.observer_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "observer_data_policy_attachment" {
+  role       = aws_iam_role.observer_data_role.name
+  policy_arn = aws_iam_policy.observer_data_policy.arn
+}
+
+
+
+
+
+
+resource "aws_iam_role_policy_attachment" "fork_ey_observer_data_policy_attachment" {
+  role       = aws_iam_role.fork_ey_observer_data_role.name
+  policy_arn = aws_iam_policy.fork_ey_observer_data_policy.arn
+}
+
+data "aws_iam_policy_document" "fork_ey_observer_data_policy_doc" {
+
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
+    resources = ["arn:aws:logs:*:*:*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["iot:Publish"]
+    resources = ["*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem",
+      "dynamodb:GetItem"
+    ]
+    resources = ["*"]
+  }
+
+
+
+}
+
+resource "aws_iam_policy" "fork_ey_observer_data_policy" {
+  name   = "${var.SERVICE}-${var.STAGE}-ForkEyObserverDataPolicy"
+  policy = data.aws_iam_policy_document.fork_ey_observer_data_policy_doc.json
+}
+
